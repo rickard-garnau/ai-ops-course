@@ -1,11 +1,11 @@
 name,age,salary,role,description
-Erik Andersson,34,48000,Systemutvecklare,Erfaren backend-utvecklare med fokus på Java och molnlösningar. Arbetar med att bygga skalbara API:er för företagets kärnsystem.
-Maria Johansson,29,42000,Dataanalytiker,Ansvarar för att omvandla rådata till affärsinsikter med hjälp av SQL och Python. Stödjer säljavdelningen med kundanalyser och rapporter.
-Lars Karlsson,45,55000,IT-säkerhetsspecialist,Säkerställer att företagets nätverk och system skyddas mot intrång och cyberhot. Genomför regelbundna riskbedömningar och säkerhetsutbildningar.
-Sofia Nilsson,26,32000,IT-supporttekniker,"Första linjens support för anställda med problem kring datorer, mobiltelefoner och programvara. Hanterar ärenden i ticket-systemet med fokus på snabb lösning."
-David Petersson,38,51000,Databasadministratör,"Förvaltar och optimerar företagets SQL-databaser för hög tillgänglighet och prestanda. Ansvarar för backup, återställning och databas säkerhet."
-Anna Bergman,31,44000,Account Manager,Bearbetar befintliga kunder och bygger långsiktiga affärsrelationer inom B2B-sektorn. Driver uppföljning och mersäljning av företagets tjänster.
-Johan Lindberg,52,59000,Säljchef,Ledar säljteamet på tio personer och ansvarar för intäktsmålen på den svenska marknaden. Utvecklar säljstrategier och coachar medarbetare mot sina mål.
-Emma Svensson,27,47000,Datavetare,Utvecklar maskininlärningsmodeller för att förutsäga kundbeteende och optimera prissättning. Arbetar nära produkt- och marknadsavdelningen.
-Oskar Dahl,33,46000,Nätverksingenjör,"Konfigurerar och underhåller företagets nätverksinfrastruktur inklusive routrar, switchar och brandväggar. Säkerställer stabil drift av kontorets uppkoppling."
-Rebecca Karlsson,39,53000,Key Account Manager,Ansvarar för företagets största kunder och strategiska avtal med högt affärsvärde. Leder förhandlingar och koordinerar interna resurser för kundprojekt.
+Erik Andersson,34,48000,Systemutvecklare,Utvecklar webbapplikationer i .NET och Azure. Har fem års erfarenhet av konsultbranschen.
+Sofia Karlsson,29,42000,Dataanalytiker,Arbetar med datavisualisering i Power BI och SQL. Stödjer affärsområden med beslutsunderlag.
+Johan Lindberg,41,56000,IT-projektledare,Ledar stora IT-transformationsprojekt i detaljhandeln. Certifierad PMP och Scrum Master.
+Maria Bergström,38,51000,Säljchef,Ansvarar för ett säljteam inom B2B-mjukvara. Fokuserar på kundrelationer och intäktstillväxt.
+Amir Hassan,26,38000,DevOps-ingenjör,Hanterar CI/CD-pipelines och molninfrastruktur i AWS. Brinner för automatisering och driftssäkerhet.
+Lisa Nilsson,45,54000,Datavetare,Bygger maskininlärningsmodeller för prediktiv analys. Har bakgrund inom matematik och statistik.
+Daniel Eriksson,31,45000,Account Manager,Säljer molntjänster till medelstora företag i Norden. Erfaren av uppsökande sälj och avtalsförhandlingar.
+Nina Pettersson,52,49000,BI-konsult,Hjälper kunder att skapa datadrivna insikter med Tableau. Har lång erfarenhet av detaljhandelssektorn.
+Oskar Sundqvist,24,33000,IT-supporttekniker,Andra linjens support för hårdvara och mjukvara. Började sin karriär som trainee förra året.
+Caroline Wahlgren,39,58000,Key Account Manager,Ansvarar för företagets största nyckelkunder inom industri. Strategisk säljare med fokus på långsiktiga partnerskap.

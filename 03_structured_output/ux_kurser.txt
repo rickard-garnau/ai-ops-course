@@ -1,0 +1,50 @@
+Programinnehåll
+
+Utbildningen omfattar 400 YH-poäng och kombinerar UX-metodik, research, interaktionsdesign, visuell design, teknik, kommunikation och praktik.
+
+År 1 - Grunderna i UX, metoder och praktiska verktyg ->
+Introduktion till studier och arbetsliv
+
+10 YH-poäng
+
+Introduktion till programmet, studierna och yrkesrollen.
+
+Interaktionsdesign
+
+50 YH-poäng
+
+Grunderna i kognition och beteendepsykologi
+Verktyg och metoder för interaktionsdesign
+Introduktion till GDPR, etik och integritetsfrågor
+AI inom UX
+Frontend
+
+20 YH-poäng
+
+Grundläggande kunskaper i HTML5, CSS3 och JavaScript
+Hur design levereras till frontendutvecklare
+Inblick i hur backend-system påverkar designbeslut
+UX research, tjänstedesign och användbarhetstestning
+
+65 YH-poäng
+
+Planera och genomföra användarintervjuer och analyser
+Skapa personas, scenarier, effektkartor och kundresor
+Utforma responsiva och testbara prototyper
+Använda testmetoder som think-aloud och card sorting
+Värdera och sammanställa resultat från användartester
+Visuell design
+
+30 YH-poäng
+
+Typografi, färglära och kontrast
+Designsystem och konceptvisualisering
+Skapa tillgängliga och användarvänliga gränssnitt
+Agil metodik och arbetssätt
+
+25 YH-poäng
+
+Agila begrepp som iterationer, user stories, standups, retrospektiv och backlog
+UX-designerns roll i ett agilt team
+Facilitera team samt ge och ta emot feedback
+Koppla kravställning till designlösningar
