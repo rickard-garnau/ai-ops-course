@@ -1,0 +1,11 @@
+name,age,salary,role,description
+Erik Andersson,34,48000,Systemutvecklare,Erfaren backend-utvecklare med fokus på Java och molnlösningar. Arbetar med att bygga skalbara API:er för företagets kärnsystem.
+Maria Johansson,29,42000,Dataanalytiker,Ansvarar för att omvandla rådata till affärsinsikter med hjälp av SQL och Python. Stödjer säljavdelningen med kundanalyser och rapporter.
+Lars Karlsson,45,55000,IT-säkerhetsspecialist,Säkerställer att företagets nätverk och system skyddas mot intrång och cyberhot. Genomför regelbundna riskbedömningar och säkerhetsutbildningar.
+Sofia Nilsson,26,32000,IT-supporttekniker,"Första linjens support för anställda med problem kring datorer, mobiltelefoner och programvara. Hanterar ärenden i ticket-systemet med fokus på snabb lösning."
+David Petersson,38,51000,Databasadministratör,"Förvaltar och optimerar företagets SQL-databaser för hög tillgänglighet och prestanda. Ansvarar för backup, återställning och databas säkerhet."
+Anna Bergman,31,44000,Account Manager,Bearbetar befintliga kunder och bygger långsiktiga affärsrelationer inom B2B-sektorn. Driver uppföljning och mersäljning av företagets tjänster.
+Johan Lindberg,52,59000,Säljchef,Ledar säljteamet på tio personer och ansvarar för intäktsmålen på den svenska marknaden. Utvecklar säljstrategier och coachar medarbetare mot sina mål.
+Emma Svensson,27,47000,Datavetare,Utvecklar maskininlärningsmodeller för att förutsäga kundbeteende och optimera prissättning. Arbetar nära produkt- och marknadsavdelningen.
+Oskar Dahl,33,46000,Nätverksingenjör,"Konfigurerar och underhåller företagets nätverksinfrastruktur inklusive routrar, switchar och brandväggar. Säkerställer stabil drift av kontorets uppkoppling."
+Rebecca Karlsson,39,53000,Key Account Manager,Ansvarar för företagets största kunder och strategiska avtal med högt affärsvärde. Leder förhandlingar och koordinerar interna resurser för kundprojekt.
