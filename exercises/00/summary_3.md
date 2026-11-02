@@ -63,17 +63,18 @@ We look forward to receiving your application! 🙏✨
 
 # Summary
 
-**Role:** Engineering Manager  
-**Company:** NOBA Bank Group (Software Engineering team, Nordax brand)  
-**Key Requirements:**  
-- 7+ years software development with C#/.NET/.NET Core  
-- 3+ years experience with modern JavaScript frameworks (preferably React)  
-- 2+ years formal leadership/management experience  
-- Strong proficiency in Microsoft’s development stack & lifecycle tools  
-- SQL experience  
-- Fluent English (written & spoken)  
-- Proven experience with hiring, goal-setting, coaching, and performance reviews  
-- Azure, TDD/CI/CD, Scrum Master, and Swedish fluency are a plus  
+**Role:** Engineering Manager, Software Engineering (Stockholm)  
+**Company:** NOBA Bank Group (Nordax brand – secure loans and customer onboarding)
 
-**What the Job Involves:**  
-Lead a team of 5 engineers responsible for customer onboarding and secure loans within the Nordax brand. Drive full-stack development of new web services, usability improvements, and maintenance of existing solutions. Collaborate closely with the Product Owner and Head of Tech Nordax to align deliveries with business objectives and deadlines. Mentor and coach team members, improve development best practices and ways of working, and help recruit/strengthen the broader Software Engineering organization.
+**What the job involves:**  
+Lead a team of 5 engineers responsible for customer-onboarding software. The role blends people management with hands-on technical leadership: coaching and hiring engineers, driving full-stack development (new web services, usability improvements, maintenance), making technical decisions, and collaborating with the Product Owner and Head of Tech Nordax to deliver on business objectives and deadlines.
+
+**Key requirements:**  
+- 7+ years of software development with C#/.NET/.NET Core  
+- 3+ years with modern JavaScript frameworks (React preferred)  
+- 2+ years of formal leadership experience  
+- Strong knowledge of the Microsoft development stack and SQL  
+- Fluent in English  
+- Experience with hiring, goal-setting, coaching, and performance reviews  
+
+**Nice-to-have:** Azure, TDD, CI/CD, Scrum Master experience, Swedish language.

@@ -85,19 +85,16 @@ Partager ce poste
 
 # Summary
 
-**Role:** Data Center Engineering Operations Technician  
+**Role:** Engineering Operations Technician – Data Center Engineering Operations  
 **Company:** Amazon Data Services Sweden AB (AWS Infrastructure Services)  
-**Key Requirements:**  
-- 2+ years relevant experience in electrical, mechanical, or controls engineering (trade qualification or degree preferred)  
-- Valid EU driving license  
-- Availability for 24x7 shift rotation  
-- Preferred: Professional certifications in electrical/mechanical/controls, data center or heavy industry experience, knowledge of basic electrical systems, HVAC/chiller plant, Air Handling Units, fan controls, and backup generator systems  
+**Location:** Västerås, Sweden (with travel to other Swedish sites)
 
-**What the job involves:**  
-- Operate and maintain mission-critical electrical, mechanical, fire/life safety, and HVAC systems to ensure >99.999% uptime  
-- Monitor and troubleshoot data center systems: incidents, changes, problem escalation, resolution, and ongoing support  
-- Oversee mechanical, electrical, HVAC, cooling, fire suppression, and generator systems  
-- Assist contractors and engineers with equipment maintenance, repairs, and new equipment deployment (racks, cabling, etc.)  
-- Conduct site walk-throughs to verify facility equipment and monitoring system operation  
-- Serve as a Facilities First Responder for critical events and support new data center setup and existing facility improvements  
-- Daily activities: monitor alarms (power/cooling/fire), plan/vendor coordinate on-site work, perform rack power-ups, facilitate new equipment handovers, support new hire onboarding, and participate in response drills
+**What the job involves**  
+You will keep mission-critical AWS data center infrastructure running by operating and maintaining electrical, mechanical, HVAC, cooling, fire/life safety, and backup generator systems. Duties include monitoring alarms, troubleshooting incidents, acting as a first responder to critical events, performing site walkthroughs, assisting with rack installation and cabling, coordinating vendor/contractor work, and supporting new facility deployments—all while maintaining better than 99.999% uptime. The role requires a 24×7 shift rotation.
+
+**Key requirements**  
+- 2+ years of relevant electrical, mechanical, and/or controls experience (degree or trade qualification preferred)  
+- Valid EU driving license  
+- Ability to prioritize in a fast-paced, complex environment  
+- Willingness to work rotating 24×7 shifts  
+- Preferred: professional certification, data center or heavy industry experience, and working knowledge of chillers, air handling units, fan controls, generators, and basic electrical systems

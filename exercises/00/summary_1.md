@@ -95,18 +95,20 @@ We’re fast, both in terms of parcel delivery and when it comes to growing our 
 
 # Summary
 
-**Role:** Data Engineer (with strong overlap in Analytics Engineering)  
-**Company:** Instabee (formed 2022 by merging Budbee & Instabox; leading European e-commerce enabler)  
-**Key Requirements:**  
-- University degree in a technical/analytical field (Math, Computer Science, Physics)  
-- Proven experience building modern data platforms on GCP and Snowflake  
-- Skills in data integration (APIs, MongoDB, MySQL), pipeline orchestration (Airflow), and data modeling with DBT/SQL/Python  
-- Familiarity with CI/CD, IaC, and preferably Docker/Kubernetes or streaming data  
-- Ability to collaborate across business, data, and tech teams; strong communication and visualization skills  
-- Based in Stockholm, hybrid work (3 days from office)  
+**Role:** Data Engineer with Analytics Engineering focus (hybrid role) in Instabee’s newly formed Data Platform team.
 
-**What the Job Involves:**  
-- Design and build Instabee’s data platform from scratch, shaping integration patterns for sources like APIs, MongoDB, and MySQL  
-- Set up and maintain infrastructure on GCP/Snowflake, including CI/CD pipelines and infrastructure-as-code  
-- Design trusted, governed data models using DBT that support business processes and enable data science, BI (Tableau), and product teams  
-- Introduce data product principles (discoverability, trustworthiness) and collaborate agilely to turn stakeholder hypotheses into reliable data endpoints
+**Company:** Instabee — a European last-mile delivery/logistics company formed in 2022 by merging Budbee and Instabox (brands include Budbee, Instabox, and Porterbuddy). Headquarters in Stockholm; hybrid work (3 days/week in office).
+
+**Key requirements:**
+- Experience building modern data platforms on **GCP and Snowflake**
+- Data integration from sources such as **APIs, MongoDB, MySQL**
+- **CI/CD, Infrastructure as Code (IaC)**, and pipeline orchestration (e.g., **Airflow**)
+- Data modeling and transformation with **DBT, SQL, and Python** (Java/Go also accepted)
+- University degree in a technical or analytical field
+- Plus: Docker/Kubernetes, streaming data, and analytics engineering experience (DBT with SQL/Python, data governance, stakeholder-facing analysis)
+- Based in Stockholm and open to hybrid work
+
+**What the job involves:**
+You’ll help shape Instabee’s data platform, which supports BI, data science, and product/technology teams. As a Data Engineer, you’ll set integration patterns, build and migrate source integrations, and maintain platform infrastructure. With your Analytics Engineering interest, you’ll design trustworthy data models, transform data with DBT/SQL/Python, and contribute to analytical projects that help stakeholders answer business questions. You’ll act as a bridge between business, data, and tech, and promote data product principles like discoverability and trustworthiness.
+
+**Tech stack mentioned:** Fivetran, Python, DBT, GCP, Snowflake, Tableau, Airflow (or similar).
