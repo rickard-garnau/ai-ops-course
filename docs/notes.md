@@ -1,4 +1,63 @@
+<a id="innehall"></a>
+
+# Innehåll
+
+- [LLMOps intro – översikt](#llmops-intro-oversikt)
+  - [1. Vad är LLMOps och varför behövs det](#llmops-intro-oversikt--1-vad-ar-llmops-och-varfor-behovs-det)
+  - [2. Exemplen från föreläsningen – tysta fel i praktiken](#llmops-intro-oversikt--2-exemplen-fran-forelasningen-tysta-fel-i-praktiken)
+  - [3. Kärnutmaningar](#llmops-intro-oversikt--3-karnutmaningar)
+  - [4. Prompt engineering: versionering och templating](#llmops-intro-oversikt--4-prompt-engineering-versionering-och-templating)
+  - [5. Evaluation](#llmops-intro-oversikt--5-evaluation)
+- [DevOps, AIOps och AI-applikationer – kort översikt](#devops-aiops-och-ai-applikationer-kort-oversikt)
+  - [1. Roller och ansvar i DevOps- och AIOps-team](#devops-aiops-och-ai-applikationer-kort-oversikt--1-roller-och-ansvar-i-devops-och-aiops-team)
+  - [2. Containers och Docker för AI-miljöer](#devops-aiops-och-ai-applikationer-kort-oversikt--2-containers-och-docker-for-ai-miljoer)
+  - [3. Vektordatabaser](#devops-aiops-och-ai-applikationer-kort-oversikt--3-vektordatabaser)
+  - [4. Prompt engineering, few-shot och chain-of-thought](#devops-aiops-och-ai-applikationer-kort-oversikt--4-prompt-engineering-few-shot-och-chain-of-thought)
+  - [5. CI/CD med AI-modeller](#devops-aiops-och-ai-applikationer-kort-oversikt--5-ci-cd-med-ai-modeller)
+  - [6. Källkod → Git → Pipeline → AI-applikation (inkl. LLM-integration)](#devops-aiops-och-ai-applikationer-kort-oversikt--6-kallkod-git-pipeline-ai-applikation-inkl-llm-integration)
+  - [7. Pipelines lokalt och i molnet för drift av AI-agenter](#devops-aiops-och-ai-applikationer-kort-oversikt--7-pipelines-lokalt-och-i-molnet-for-drift-av-ai-agenter)
+  - [8. Bygga och integrera RAG (Retrieval Augmented Generation)](#devops-aiops-och-ai-applikationer-kort-oversikt--8-bygga-och-integrera-rag-retrieval-augmented-generation)
+- [Vad är AI? – översikt](#vad-ar-ai-oversikt)
+  - [1. Definition](#vad-ar-ai-oversikt--1-definition)
+  - [2. Vad kännetecknar ett AI-system](#vad-ar-ai-oversikt--2-vad-kannetecknar-ett-ai-system)
+  - [3. Nivåer av AI: narrow AI, AGI och ASI](#vad-ar-ai-oversikt--3-nivaer-av-ai-narrow-ai-agi-och-asi)
+  - [4. Delområden: machine learning, deep learning och dess grenar](#vad-ar-ai-oversikt--4-delomraden-machine-learning-deep-learning-och-dess-grenar)
+  - [5. Var LLM:er hamnar – koppling till kursen](#vad-ar-ai-oversikt--5-var-llm-er-hamnar-koppling-till-kursen)
+- [LLM – hur funkar det? Från text till siffror](#llm-hur-funkar-det-fran-text-till-siffror)
+  - [1. Grundproblemet: datorer förstår bara siffror](#llm-hur-funkar-det-fran-text-till-siffror--1-grundproblemet-datorer-forstar-bara-siffror)
+  - [2. Naiv approach: one-hot encoding](#llm-hur-funkar-det-fran-text-till-siffror--2-naiv-approach-one-hot-encoding)
+  - [3. Embeddings – ord som punkter i ett rum](#llm-hur-funkar-det-fran-text-till-siffror--3-embeddings-ord-som-punkter-i-ett-rum)
+  - [4. Fler dimensioner](#llm-hur-funkar-det-fran-text-till-siffror--4-fler-dimensioner)
+  - [5. Hur man jämför vektorer: avstånd och likhet](#llm-hur-funkar-det-fran-text-till-siffror--5-hur-man-jamfor-vektorer-avstand-och-likhet)
+- [Transformers och attention – hur en LLM förutsäger nästa ord](#transformers-och-attention-hur-en-llm-forutsager-nasta-ord)
+  - [1. "Attention Is All You Need" – artikeln som startade allt](#transformers-och-attention-hur-en-llm-forutsager-nasta-ord--1-attention-is-all-you-need-artikeln-som-startade-allt)
+  - [2. Grundidén: förutsäg nästa ord](#transformers-och-attention-hur-en-llm-forutsager-nasta-ord--2-grundiden-forutsag-nasta-ord)
+  - [3. Varför kontext behövs: samma ord, olika betydelse](#transformers-och-attention-hur-en-llm-forutsager-nasta-ord--3-varfor-kontext-behovs-samma-ord-olika-betydelse)
+  - [4. Hur attention fungerar – beräkna likheter](#transformers-och-attention-hur-en-llm-forutsager-nasta-ord--4-hur-attention-fungerar-berakna-likheter)
+- [GPT – Generative Pre-trained Transformer](#gpt-generative-pre-trained-transformer)
+  - [1. Namnet förklarar modellen](#gpt-generative-pre-trained-transformer--1-namnet-forklarar-modellen)
+  - [2. Pre-training – lära sig språk från internet](#gpt-generative-pre-trained-transformer--2-pre-training-lara-sig-sprak-fran-internet)
+  - [3. Base model – en avancerad autocomplete](#gpt-generative-pre-trained-transformer--3-base-model-en-avancerad-autocomplete)
+  - [4. Från base model till chatt – fine-tuning](#gpt-generative-pre-trained-transformer--4-fran-base-model-till-chatt-fine-tuning)
+  - [5. Temperature – variation och "kreativitet"](#gpt-generative-pre-trained-transformer--5-temperature-variation-och-kreativitet)
+  - [6. Helheten](#gpt-generative-pre-trained-transformer--6-helheten)
+  - [7. Koppling till kursen](#gpt-generative-pre-trained-transformer--7-koppling-till-kursen)
+- [RLHF, LLM:ers begränsningar, verktyg och multimodalitet](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet)
+  - [1. RLHF – Reinforcement Learning from Human Feedback](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--1-rlhf-reinforcement-learning-from-human-feedback)
+  - [2. RLHF steg för steg – reward model](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--2-rlhf-steg-for-steg-reward-model)
+  - [3. LLM:ers begränsningar](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--3-llm-ers-begransningar)
+  - [4. Lösningen: verktyg (tool use / function calling)](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--4-losningen-verktyg-tool-use-function-calling)
+  - [5. Multimodala modeller (LMM)](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--5-multimodala-modeller-lmm)
+  - [6. Helheten – hela träningskedjan](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--6-helheten-hela-traningskedjan)
+  - [7. Koppling till kursen](#rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--7-koppling-till-kursen)
+
+---
+
+<a id="llmops-intro-oversikt"></a>
+
 # LLMOps intro – översikt
+
+<a id="llmops-intro-oversikt--1-vad-ar-llmops-och-varfor-behovs-det"></a>
 
 ## 1. Vad är LLMOps och varför behövs det
 
@@ -12,6 +71,8 @@ Grundproblemet är att **traditionell mjukvara felar högljutt, men LLM:er felar
 - [LLMOps: MLOps for Large Language Models – Giskard](https://giskard.ai/knowledge/llmops-mlops-for-large-language-models)
 - [LLMOps vs MLOps: Key Differences – Codebridge](https://www.codebridge.tech/articles/llmops-vs-mlops-key-differences-architecture-managing-the-next-generation-of-ml-systems)
 
+<a id="llmops-intro-oversikt--2-exemplen-fran-forelasningen-tysta-fel-i-praktiken"></a>
+
 ## 2. Exemplen från föreläsningen – tysta fel i praktiken
 
 Varje exempel visar ett fel som aldrig ger något felmeddelande:
@@ -20,6 +81,8 @@ Varje exempel visar ett fel som aldrig ger något felmeddelande:
 - **Promptändring med sidoeffekt:** Någon ändrar prompten till "svara mer koncist". Boten börjar korta ned felsökningsinstruktioner och hoppar över steg. Det löses med **prompt-versionering och evaluering**, dvs. att ändringen testas mot ett fast testset innan den går ut och kan rullas tillbaka.
 - **Ingen koll på tokens:** Kostnaden växer okontrollerat utan att någon ser varför. Det löses med **observability**, där tokenförbrukning loggas per anrop.
 - **Ingen rate limiting:** En användare eller bot kan skicka obegränsat med anrop, vilket ger höga kostnader och risk för missbruk. Det löses med **governance**.
+
+<a id="llmops-intro-oversikt--3-karnutmaningar"></a>
 
 ## 3. Kärnutmaningar
 
@@ -32,6 +95,8 @@ Varje exempel visar ett fel som aldrig ger något felmeddelande:
 - [What Is LLMOps? A Guide for AI Practitioners – MLflow](https://mlflow.org/articles/tags/llm-ops-explained)
 - [LLMOps Crash Course Part 6 – Daily Dose of DS](https://www.dailydoseofds.com/llmops-crash-course-part-6/)
 
+<a id="llmops-intro-oversikt--4-prompt-engineering-versionering-och-templating"></a>
+
 ## 4. Prompt engineering: versionering och templating
 
 **Prompt-versionering** betyder att varje prompt sparas med versionsnummer, oftast i Git eller ett verktyg för prompthantering. Då vet du vilken version som körs i produktion, kan jämföra resultat mellan versioner och rulla tillbaka om en ändring försämrar svaren. **Prompt templating** betyder att prompten är en mall med variabler (t.ex. `{user_question}`, `{context}`) som fylls i vid körning. Det skiljer den fasta instruktionen från den dynamiska datan och gör prompten återanvändbar och testbar.
@@ -41,6 +106,8 @@ Varje exempel visar ett fel som aldrig ger något felmeddelande:
 - [Production Playbook: Advanced Prompt Management – MLOps Community](https://mlopscommunity.substack.com/p/production-playbook-advanced-prompt)
 - [What is Prompt Management? – LangWatch](https://langwatch.ai/blog/what-is-prompt-management-and-how-to-version-control-deploy-prompts-in-productions)
 - [Prompt Versioning in Production – Tian Pan](https://tianpan.co/blog/2026-04-09-prompt-versioning-production-llm)
+
+<a id="llmops-intro-oversikt--5-evaluation"></a>
 
 ## 5. Evaluation
 
@@ -61,7 +128,13 @@ I kursen kommer detta vecka 3.
 
 ---
 
+[↑ Till innehåll](#innehall)
+
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt"></a>
+
 # DevOps, AIOps och AI-applikationer – kort översikt
+
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--1-roller-och-ansvar-i-devops-och-aiops-team"></a>
 
 ## 1. Roller och ansvar i DevOps- och AIOps-team
 
@@ -73,6 +146,8 @@ DevOps handlar om hur system byggs och levereras; AIOps om hur de drivs och opti
 - [What is AIOps? – CIO](https://www.cio.com/article/3529772/what-is-aiops-injecting-intelligence-into-it-operations.html)
 - [DevOps Team Roles and Responsibilities – IT Svit](https://itsvit.com/articles/devops-team-roles-and-responsibilities/)
 
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--2-containers-och-docker-for-ai-miljoer"></a>
+
 ## 2. Containers och Docker för AI-miljöer
 
 Docker paketerar kod, bibliotek och drivrutinsberoenden (t.ex. CUDA, PyTorch) i en image, vilket ger reproducerbara och portabla miljöer och slutar "det fungerar på min maskin". För GPU-arbetslaster används NVIDIA Container Toolkit, och Docker Compose kan reservera GPU:er för tjänster. Samma image kan köras lokalt, på GPU-moln eller i Kubernetes.
@@ -81,6 +156,8 @@ Docker paketerar kod, bibliotek och drivrutinsberoenden (t.ex. CUDA, PyTorch) i 
 
 - [NVIDIA GPU-stöd i Docker för AI/ML – OneUptime](https://oneuptime.com/blog/post/2026-01-16-docker-nvidia-gpu-ai-ml/view)
 - [AI-arbetsflöden med Docker + GPU-moln – Runpod](https://www.runpod.io/articles/guides/ai-workflows-with-docker-gpu-cloud)
+
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--3-vektordatabaser"></a>
 
 ## 3. Vektordatabaser
 
@@ -91,6 +168,8 @@ En vektordatabas lagrar embeddings (numeriska representationer av text, bild, lj
 - [What is a Vector Database? – NVIDIA](https://www.nvidia.com/en-gb/glossary/vector-database/)
 - [What is a vector database? – SAP](https://www.sap.com/resources/what-is-a-vector-database)
 - [Vector database – Voxel51](https://voxel51.com/glossary/vector-database)
+
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--4-prompt-engineering-few-shot-och-chain-of-thought"></a>
 
 ## 4. Prompt engineering, few-shot och chain-of-thought
 
@@ -106,6 +185,8 @@ Prompt engineering är att formulera indata så att språkmodellen ger önskat r
 - [Chain of Thought Prompting Guide – PromptHub](https://www.prompthub.us/blog/chain-of-thought-prompting-guide)
 - [Few-Shot Chain-of-Thought – Avahi](https://avahi.ai/glossary/few-shot-chain-of-thought/)
 
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--5-ci-cd-med-ai-modeller"></a>
+
 ## 5. CI/CD med AI-modeller
 
 CI/CD för ML utökar vanlig CI/CD med tester av data och modeller, samt kontinuerlig träning (CT): pipeline-CI bygger och testar kod, pipeline-CD distribuerar pipelines och modeller till produktion. Modeller kan försämras när data ändras, så övervakning kan trigga omträning. Modeller versioneras i ett modellregister.
@@ -116,6 +197,8 @@ CI/CD för ML utökar vanlig CI/CD med tester av data och modeller, samt kontinu
 - [CI/CD for Machine Learning – Iguazio](https://www.iguazio.com/glossary/ci-cd-for-machine-learning/)
 - [CI/CD for MLOps – Hopsworks](https://www.hopsworks.ai/dictionary/ci-cd-for-mlops)
 
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--6-kallkod-git-pipeline-ai-applikation-inkl-llm-integration"></a>
+
 ## 6. Källkod → Git → Pipeline → AI-applikation (inkl. LLM-integration)
 
 Flödet: kod pushas till Git → pipeline triggas (t.ex. GitHub Actions) → build och tester → Docker-image byggs och pushas till ett register (t.ex. ECR) → deployment till driftmiljö. LLM-integration kräver att API-nycklar hanteras som secrets (aldrig i koden) och att prompts och konfiguration versioneras tillsammans med koden.
@@ -125,6 +208,8 @@ Flödet: kod pushas till Git → pipeline triggas (t.ex. GitHub Actions) → bui
 - [CI/CD for Machine Learning (pipelinesteg) – Iguazio](https://iguazio.com/?p=5238)
 - [ExpenTrack: LLM-app med CI/CD via GitHub Actions – GitHub](https://github.com/SoloCoderHi/ExpenTrack)
 - [Continuous Deployment with GitHub Actions – LlamaIndex](https://developers.llamaindex.ai/python/llamaagents/llamactl/cd-with-github-actions/)
+
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--7-pipelines-lokalt-och-i-molnet-for-drift-av-ai-agenter"></a>
 
 ## 7. Pipelines lokalt och i molnet för drift av AI-agenter
 
@@ -138,6 +223,8 @@ Flödet: kod pushas till Git → pipeline triggas (t.ex. GitHub Actions) → bui
 - [NVIDIA GPU-stöd i Docker – OneUptime](https://oneuptime.com/blog/post/2026-01-16-docker-nvidia-gpu-ai-ml/view)
 - [ExpenTrack – GitHub](https://github.com/SoloCoderHi/ExpenTrack)
 
+<a id="devops-aiops-och-ai-applikationer-kort-oversikt--8-bygga-och-integrera-rag-retrieval-augmented-generation"></a>
+
 ## 8. Bygga och integrera RAG (Retrieval Augmented Generation)
 
 RAG kompletterar en LLM med egen data. Flöde: (1) dokument delas upp i bitar och embeddas, (2) lagras i en vektordatabas, (3) användarens fråga embeddas och liknande bitar hämtas (retrieval), (4) bitarna läggs in i prompten och modellen genererar ett svar grundat i dem. Fördelen är aktuell, verifierbar information utan omträning. Retrieval kan förbättras med hybridsökning (BM25 + vektor) och omrankning.
@@ -149,7 +236,13 @@ RAG kompletterar en LLM med egen data. Flöde: (1) dokument delas upp i bitar oc
 - [A beginner's guide to building a RAG application from scratch – Towards Data Science](https://towardsdatascience.com/a-beginners-guide-to-building-a-retrieval-augmented-generation-rag-application-from-scratch-e52921953a5d/)
 
 ---
+[↑ Till innehåll](#innehall)
+
+<a id="vad-ar-ai-oversikt"></a>
+
 # Vad är AI? – översikt
+
+<a id="vad-ar-ai-oversikt--1-definition"></a>
 
 ## 1. Definition
 
@@ -168,6 +261,8 @@ Skillnaden mellan *learned* och *programmed* i sista punkten är viktig. Ett reg
 - [Artificial intelligence – Britannica](https://www.britannica.com/technology/artificial-intelligence/Alan-Turin)
 - [What is AI – The Turing Archive](https://alanturing.net/turing_archive/pages/Reference%20Articles/What%20is%20AI.html)
 
+<a id="vad-ar-ai-oversikt--2-vad-kannetecknar-ett-ai-system"></a>
+
 ## 2. Vad kännetecknar ett AI-system
 
 Mindmappen sammanfattar ett AI-system med tre drag. Systemet **beter sig intelligent**, det **lär sig från data** i stället för att varje regel skrivs för hand, och det **analyserar sin omgivning och agerar** utifrån det. Det sista draget är grunden för det som idag kallas AI-agenter: ett system som läser av en situation (input, verktygsresultat) och väljer nästa steg. I kursen bygger ni sådana agenter med PydanticAI och tool use (vecka 2).
@@ -175,6 +270,8 @@ Mindmappen sammanfattar ett AI-system med tre drag. Systemet **beter sig intelli
 **Källor**
 
 - [Section 2.1: What is Artificial Intelligence? – Encyclopedia of the Future](https://docmckee.com/oer/encyclopedia-of-the-future/section-2-1-what-is-artificial-intelligence/?amp=1)
+
+<a id="vad-ar-ai-oversikt--3-nivaer-av-ai-narrow-ai-agi-och-asi"></a>
 
 ## 3. Nivåer av AI: narrow AI, AGI och ASI
 
@@ -191,6 +288,8 @@ Narrow AI är inringat på sliden eftersom **all AI som finns idag är narrow AI
 - [The different levels of AI: Narrow AI, AGI and ASI – DataNorth](https://datanorth.ai/blog/the-different-levels-of-ai-narrow-ai-agi-and-asi)
 - [From Narrow to General to Super Intelligence – Mouser](https://resources.mouser.com/explore-all/from-narrow-to-general-to-super-intelligence)
 - [Types of AI: ANI, AGI and ASI explained – DEV Community](https://dev.to/anilparmar/types-of-artificial-intelligence-ani-agi-and-asi-explained-5gea)
+
+<a id="vad-ar-ai-oversikt--4-delomraden-machine-learning-deep-learning-och-dess-grenar"></a>
 
 ## 4. Delområden: machine learning, deep learning och dess grenar
 
@@ -217,6 +316,8 @@ Tumregel: all deep learning är machine learning, men all machine learning är i
 - [Difference between AI, ML, LLM and Generative AI – Toloka](https://toloka.ai/blog/difference-between-ai-ml-llm-and-generative-ai/)
 - [Traditional AI vs ML vs DL vs Generative AI – Open Exam Prep](https://open-exam-prep.com/study-guides/gcp-genai-leader/ch01-genai-concepts/genai-vs-traditional-ai)
 
+<a id="vad-ar-ai-oversikt--5-var-llm-er-hamnar-koppling-till-kursen"></a>
+
 ## 5. Var LLM:er hamnar – koppling till kursen
 
 En stor språkmodell (LLM) är en deep learning-modell (transformer-arkitektur) tränad på enorma textmängder. Den ligger i skärningen mellan **NLP** och **generative AI**: den förstår språk och genererar ny text. Eftersom den bara förutsäger sannolik nästa token kan den låta säker även när den har fel (hallucinationer). Svaren kan också variera mellan körningar (icke-deterministiskt).
@@ -231,11 +332,19 @@ Därför finns LLMOps. Kursen tar inte upp hur modellen tränas. Den handlar om 
 
 ---
 
+[↑ Till innehåll](#innehall)
+
+<a id="llm-hur-funkar-det-fran-text-till-siffror"></a>
+
 # LLM – hur funkar det? Från text till siffror
+
+<a id="llm-hur-funkar-det-fran-text-till-siffror--1-grundproblemet-datorer-forstar-bara-siffror"></a>
 
 ## 1. Grundproblemet: datorer förstår bara siffror
 
 En dator lagrar all text som tal, i slutänden binära ettor och nollor. Bokstaven "A" är t.ex. talet 65 i ASCII/UTF-8. Den kodningen säger bara *vilket tecken* det är, inget om vad ordet *betyder*. För att en språkmodell ska kunna räkna på språk behöver ord (egentligen tokens, se avsnitt 6) göras om till tal som fångar betydelse. Hela föreläsningen handlar om att hitta en sådan representation.
+
+<a id="llm-hur-funkar-det-fran-text-till-siffror--2-naiv-approach-one-hot-encoding"></a>
 
 ## 2. Naiv approach: one-hot encoding
 
@@ -261,6 +370,8 @@ Det vi behöver är en representation där **avståndet mellan vektorer motsvara
 - [How are embeddings different from one-hot encoding? – Zilliz](https://zilliz.com/ai-faq/how-are-embeddings-different-from-onehot-encoding)
 - [Data Representation for NLP Tasks – KDnuggets](https://www.kdnuggets.com/2018/11/data-representation-natural-language-processing.html)
 - [Svenska Akademiens ordlista (SAOL 14) – Sveriges Radio](https://www.sverigesradio.se/artikel/6123110)
+
+<a id="llm-hur-funkar-det-fran-text-till-siffror--3-embeddings-ord-som-punkter-i-ett-rum"></a>
 
 ## 3. Embeddings – ord som punkter i ett rum
 
@@ -299,6 +410,8 @@ Vad diagrammet visar:
 
 Modellen kan alltså räkna ut att en kanin liknar en hamster mer än ett lejon, vilket one-hot aldrig kunde.
 
+<a id="llm-hur-funkar-det-fran-text-till-siffror--4-fler-dimensioner"></a>
+
 ## 4. Fler dimensioner
 
 Två eller tre dimensioner kan vi rita och föreställa oss. Riktiga embeddings har **hundratals till tusentals dimensioner** (t.ex. 384, 768 eller 1536). Matematiken är densamma oavsett antal dimensioner, vi kan bara inte rita det.
@@ -314,6 +427,8 @@ Ett klassiskt exempel visar att embeddings fångar relationer: `kung − man + k
 - [Properties of word embeddings – DeepLearning.AI](https://learn.deeplearning.ai/specializations/deep-learning/lesson/ov3ci/properties-of-word-embeddings)
 - [Word Embeddings – Ben-Gurion University (Elhadad)](https://www.cs.bgu.ac.il/~elhadad/nlp18/embeddings.html)
 - [Understanding Word Embeddings (1) – Algebra – Eran Raviv](https://eranraviv.com/understanding-word-embeddings-1-algebra/)
+
+<a id="llm-hur-funkar-det-fran-text-till-siffror--5-hur-man-jamfor-vektorer-avstand-och-likhet"></a>
 
 ## 5. Hur man jämför vektorer: avstånd och likhet
 
@@ -336,7 +451,13 @@ Cosinuslikhet är standard för text-embeddings. Där är riktningen (vad texten
 
 - [Embeddings explained (cosine similarity) – Rohith]
 
+[↑ Till innehåll](#innehall)
+
+<a id="transformers-och-attention-hur-en-llm-forutsager-nasta-ord"></a>
+
 # Transformers och attention – hur en LLM förutsäger nästa ord
+
+<a id="transformers-och-attention-hur-en-llm-forutsager-nasta-ord--1-attention-is-all-you-need-artikeln-som-startade-allt"></a>
 
 ## 1. "Attention Is All You Need" – artikeln som startade allt
 
@@ -348,6 +469,8 @@ Tidigare språkmodeller (RNN, LSTM) läste text ett ord i taget, i ordning. Det 
 
 - [Attention Is All You Need – arXiv (originalartikeln)](https://arxiv.org/abs/1706.03762)
 - [Attention is All You Need – Google Research](https://research.google/pubs/attention-is-all-you-need/)
+
+<a id="transformers-och-attention-hur-en-llm-forutsager-nasta-ord--2-grundiden-forutsag-nasta-ord"></a>
 
 ## 2. Grundidén: förutsäg nästa ord
 
@@ -367,6 +490,8 @@ Modellen "vet" inte svaret. Den har sett miljarder textexempel under träningen 
 
 För att göra en bra förutsägelse räcker det inte att titta på det sista ordet. Modellen måste förstå **sammanhanget** (context).
 
+<a id="transformers-och-attention-hur-en-llm-forutsager-nasta-ord--3-varfor-kontext-behovs-samma-ord-olika-betydelse"></a>
+
 ## 3. Varför kontext behövs: samma ord, olika betydelse
 
 Embeddings (förra föreläsningen) ger varje ord *en* vektor. Men många ord betyder olika saker beroende på sammanhang:
@@ -376,11 +501,19 @@ Embeddings (förra föreläsningen) ger varje ord *en* vektor. Men många ord be
 
 Med en statisk embedding skulle "cool" ha exakt samma vektor i båda meningarna. Attention löser det genom att **justera varje ords vektor utifrån de andra orden i meningen**. Resultatet kallas *kontextuella embeddings*.
 
+<a id="transformers-och-attention-hur-en-llm-forutsager-nasta-ord--4-hur-attention-fungerar-berakna-likheter"></a>
+
 ## 4. Hur attention fungerar – beräkna likheter
 
 Attention bygger på samma idé som cosinuslikhet
 
+[↑ Till innehåll](#innehall)
+
+<a id="gpt-generative-pre-trained-transformer"></a>
+
 # GPT – Generative Pre-trained Transformer
+
+<a id="gpt-generative-pre-trained-transformer--1-namnet-forklarar-modellen"></a>
 
 ## 1. Namnet förklarar modellen
 
@@ -398,6 +531,8 @@ GPT är OpenAI:s modellfamilj, men samma recept används av alla stora språkmod
 
 - [GPT (Generative Pre-trained Transformer) – Netguru](https://www.netguru.com/glossary/generative-pre-trained-transformer)
 - [Generative Pre-trained Transformer – Moveworks](https://www.moveworks.com/us/en/resources/ai-terms-glossary/generative-pre-trained-transformer)
+
+<a id="gpt-generative-pre-trained-transformer--2-pre-training-lara-sig-sprak-fran-internet"></a>
 
 ## 2. Pre-training – lära sig språk från internet
 
@@ -419,6 +554,8 @@ Genom att bli bra på att förutsäga nästa ord lär sig modellen indirekt gram
 - [GPT — Intuitively and Exhaustively Explained – IAEE](https://iaee.substack.com/p/gpt-intuitively-and-exhaustively-explained-c70c38e87491)
 - [Pre-Trained Models: Past, Present and Future – arXiv](https://arxiv.org/pdf/2106.07139)
 
+<a id="gpt-generative-pre-trained-transformer--3-base-model-en-avancerad-autocomplete"></a>
+
 ## 3. Base model – en avancerad autocomplete
 
 Efter förträningen har man en **base model**. Den fortsätter text, men den *svarar inte på frågor* som en assistent:
@@ -427,6 +564,8 @@ Efter förträningen har man en **base model**. Den fortsätter text, men den *s
     Base model kan fortsätta: "Vad är huvudstaden i Danmark? Vad är huvudstaden i Finland?"
 
 Modellen har sett många listor med quizfrågor på internet, så att fortsätta listan är en sannolik fortsättning. Den vet svaret men förstår inte att den ska *svara*.
+
+<a id="gpt-generative-pre-trained-transformer--4-fran-base-model-till-chatt-fine-tuning"></a>
 
 ## 4. Från base model till chatt – fine-tuning
 
@@ -451,6 +590,8 @@ Under huven är det fortfarande nästa-token-förutsägelse. Rollerna är bara t
 - [The Origins of ChatGPT and InstructGPT – DZone](https://dzone.com/articles/the-origins-of-chatgpt-and-instructgpt)
 - [ChatGPT primer – Aman.ai](https://aman.ai/primers/ai/chatGPT/)
 
+<a id="gpt-generative-pre-trained-transformer--5-temperature-variation-och-kreativitet"></a>
+
 ## 5. Temperature – variation och "kreativitet"
 
 Modellen räknar fram en poäng (logit) för varje möjligt nästa token. Poängen görs om till sannolikheter med softmax. **Temperature (T)** delar poängen innan softmax och ändrar därmed hur spetsig fördelningen blir.
@@ -474,11 +615,15 @@ Illustrativt exempel, nästa token efter "Hur är":
 - [What is Temperature in LLMs? – Daily Dose of DS](https://www.dailydoseofds.com/p/what-is-temperature-in-llms)
 - [The Effect of Sampling Temperature on Problem Solving in LLMs – arXiv](https://arxiv.org/pdf/2402.05201)
 
+<a id="gpt-generative-pre-trained-transformer--6-helheten"></a>
+
 ## 6. Helheten
 
     Internettext → pre-training (nästa token) → base model
                 → instruction tuning + RLHF  → chat-modell
                 → prompt + temperature       → svar
+
+<a id="gpt-generative-pre-trained-transformer--7-koppling-till-kursen"></a>
 
 ## 7. Koppling till kursen
 
@@ -486,7 +631,13 @@ Illustrativt exempel, nästa token efter "Hur är":
 - `agent.run("...")` skickar ditt meddelande som **user-rollen**.
 - Temperature kan sättas via modellinställningar (`model_settings={"temperature": 0.0}`). För strukturerad output (övning 0) vill du oftast ha låg temperature, så att svaren blir konsekventa och lättare att validera med Pydantic.
 
+[↑ Till innehåll](#innehall)
+
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet"></a>
+
 # RLHF, LLM:ers begränsningar, verktyg och multimodalitet
+
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--1-rlhf-reinforcement-learning-from-human-feedback"></a>
 
 ## 1. RLHF – Reinforcement Learning from Human Feedback
 
@@ -502,6 +653,8 @@ Grundidén från föreläsningen:
 
 - [RLHF, explained simply – AI Connections](https://aiconnections.substack.com/p/reinforcement-learning-from-human)
 - [What is RLHF? – OVHcloud](https://www.ovhcloud.com/en/learn/what-is-rlhf/)
+
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--2-rlhf-steg-for-steg-reward-model"></a>
 
 ## 2. RLHF steg för steg – reward model
 
@@ -522,6 +675,8 @@ Modellen lär sig alltså inte direkt av människor i realtid. Den lär sig av e
 - [Chapter 26: Reinforcement Learning from Human Feedback – APXML](https://apxml.com/courses/how-to-build-a-large-language-model/chapter-26-reinforcement-learning-human-feedback-rlhf)
 - [How Does RLHF Work? – TechInterview](https://www.techinterview.org/post/3233460080/how-does-rlhf-work-reinforcement-learning-from-human-feedback-explained/)
 
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--3-llm-ers-begransningar"></a>
+
 ## 3. LLM:ers begränsningar
 
 En LLM är i grunden en nästa-token-förutsägare. Det förklarar dess svagheter.
@@ -541,6 +696,8 @@ En LLM är i grunden en nästa-token-förutsägare. Det förklarar dess svaghete
 - [Tokenization Constraints in LLMs: Symbolic and Arithmetic Reasoning Limits – arXiv](https://arxiv.org/pdf/2505.14178)
 - [The Lookahead Limitation: Why Multi-Operand Addition is Hard for LLMs – arXiv](https://arxiv.org/html/2502.19981v1)
 - [Why LLMs Struggle: Math, Structured Data & Reasoning Limits – Moveo](https://moveo.ai/blog/why-llm-struggle)
+
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--4-losningen-verktyg-tool-use-function-calling"></a>
 
 ## 4. Lösningen: verktyg (tool use / function calling)
 
@@ -570,6 +727,8 @@ Modellen kör alltså aldrig koden själv. Den genererar text som beskriver vilk
 - [An Introduction to Function Calling and Tool Use – DEV Community](https://dev.to/apideck/an-introduction-to-function-calling-and-tool-use-in-llms-9kl)
 - [Guide to Tool Calling in LLMs – Analytics Vidhya](https://www.analyticsvidhya.com/blog/2024/08/tool-calling-in-llms/)
 
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--5-multimodala-modeller-lmm"></a>
+
 ## 5. Multimodala modeller (LMM)
 
 | Förkortning | Betydelse | Input |
@@ -587,12 +746,16 @@ Det som ofta är *output* från en modell är fortfarande text. Bild- eller ljud
 - [What are Large Multimodal Models (LMMs)? – Shaip](https://www.shaip.com/blog/what-are-large-multimodal-models-lmms/)
 - [Large Multimodal Models – AIMultiple](https://aimultiple.com/de/large-multimodal-models)
 
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--6-helheten-hela-traningskedjan"></a>
+
 ## 6. Helheten – hela träningskedjan
 
     Internettext → pre-training             → base model (autocomplete)
                  → instruction tuning        → kan svara på frågor
                  → RLHF                      → hjälpsam, säker, i chattformat
                  → + verktyg + RAG           → kan räkna, söka, använda dina data
+
+<a id="rlhf-llm-ers-begransningar-verktyg-och-multimodalitet--7-koppling-till-kursen"></a>
 
 ## 7. Koppling till kursen
 
