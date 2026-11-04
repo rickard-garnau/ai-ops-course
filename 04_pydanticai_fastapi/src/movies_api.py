@@ -1,9 +1,9 @@
-from fastapi import FastAPI
-from pydantic_ai import Agent
-from dotenv import load_dotenv
-from utils import query_duckdb
-from model import nvidia_model
 from data_models import Movie, Prompt
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from model import nvidia_model
+from pydantic_ai import Agent
+from utils import query_duckdb
 
 load_dotenv()
 
@@ -13,10 +13,12 @@ agent = Agent(
 
 app = FastAPI()
 
+
 @app.get("/movies")
 async def read_movies():
     movies = query_duckdb("FROM movies;")
     return movies.to_dict(orient="records")
+
 
 @app.post("/movie")
 async def create_movie(query: Prompt):
@@ -25,6 +27,6 @@ async def create_movie(query: Prompt):
 
     query_duckdb(
         "INSERT INTO movies VALUES (?,?,?,?)",
-        parameters=(movie.title, movie.year, movie.genre, movie.rating)
+        parameters=(movie.title, movie.year, movie.genre, movie.rating),
     )
     return movie

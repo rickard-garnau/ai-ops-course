@@ -762,3 +762,81 @@ Det som ofta är *output* från en modell är fortfarande text. Bild- eller ljud
 - **Vecka 2 – tool use (`06_pydanticai_tool_use`):** I PydanticAI registrerar du verktyg med `@agent.tool`. Agenten bestämmer själv när den ska anropa dem.
 - **Vecka 3–4 – RAG:** Löser kunskapsgränsen för *dina* dokument genom att hämta relevant text och lägga den i prompten.
 - **Vecka 6 – MCP (Model Context Protocol):** En standard för att koppla verktyg till LLM:er, så att samma verktyg kan användas av olika modeller och appar.
+
+# Två arkitekturbilder – hur delarna hänger ihop
+
+## Bild 1: Flödet inne i en agent
+
+    PydanticAI ─┐
+    Nvidia Build ┼─→ Agent ─→ Output (string) ─→ Strukturerad ─→ Postprocessing
+    Prompt ─────┘                    ↑
+                               Pydantic model
+
+### Tre saker går in i agenten
+
+| In | Vad det är | I din kod |
+|---|---|---|
+| **PydanticAI** | biblioteket som bygger agenten | `from pydantic_ai import Agent` |
+| **Nvidia Build** | modellen som gör jobbet, via API | `nvidia_model("nvidia/nemotron-...")` |
+| **Prompt** | instruktioner + användarens fråga | `instructions="..."` + `agent.run(ad)` |
+
+### Sedan händer fyra steg
+
+1. **Agent:** skickar prompten till modellen och väntar på svar.
+2. **Output (string):** LLM:en svarar *alltid* med text i grunden. Utan något mer är `result.output` en `str`, som i ChefBot och exercise 0b.
+3. **Strukturerad:** **Pydantic-modellen** pekar ned i flödet här. Med `output_type=JobAdSummary` tvingas texten in i ett schema och valideras. Ut kommer ett objekt med fält och typer i stället för fri text.
+4. **Postprocessing:** när datan är strukturerad kan vanlig Python jobba vidare med den.
+
+| Postprocessing i kursen | Exempel |
+|---|---|
+| rätta ett fält | `job.words_in_article = len(ad.split())` |
+| räkna | medellön över alla `EmployeeModel` |
+| spara | `model_dump()` → DataFrame → CSV |
+| skriva till databas | `INSERT INTO movies ...` i lektion 4 |
+
+**Poängen:** utan steg 3 går steg 4 inte att göra pålitligt. Man kan inte räkna, spara eller sätta in i en databas från fri text.
+
+---
+
+## Bild 2: Hela applikationen
+
+    DuckDB ←→ BACKEND ←→ API ←→ FRONTEND
+                         │   ← Prompt
+                         │   → Structured output
+
+### De fyra delarna
+
+| Del | Ansvar | Verktyg | Din fil (lektion 4/5) |
+|---|---|---|---|
+| **DB** | sparar data permanent | DuckDB | `data/movies.duckdb`, `utils.py`, `setup_db.py` |
+| **Backend** | logiken: agent, instruktioner, validering | Pydantic, PydanticAI | `chat_agent.py`, `data_models.py`, `constants.py` |
+| **API** | dörren mellan backend och frontend | FastAPI | `api.py`, `movies_api.py` |
+| **Frontend** | det användaren ser och skriver i | Streamlit | `frontend.py` |
+
+### Pilarna mellan API och frontend
+- **Prompt (←):** användaren skriver i Streamlit. Frontenden skickar texten till API:et med `httpx.post(...)`.
+- **Structured output (→):** API:et svarar med JSON som följer en Pydantic-modell (`ChatResponse`, `Movie`). Frontenden vet exakt vilka fält som kommer.
+
+### En request genom hela systemet (lektion 4, filmer)
+
+    1. Användaren skriver "en bra skräckfilm" i frontenden
+    2. Frontend → POST /movie → API (FastAPI validerar mot Prompt)
+    3. API → backend: agent.run(prompt, output_type=Movie)
+    4. Backend → Nvidia → JSON → validerat Movie-objekt          ← bild 1
+    5. Backend → DuckDB: INSERT INTO movies (postprocessing)
+    6. API → frontend: Movie som JSON
+    7. Frontend visar filmen
+
+### Varför delarna hålls isär
+- **Byta frontend utan att röra backend:** API:et är ett kontrakt. Streamlit, en mobilapp eller curl kan alla prata med det.
+- **Testa backend utan server:** `chat_agent.py` kan köras i en notebook (`chat_eda.ipynb`).
+- **Skala:** API:et är stateless, så flera instanser kan köras samtidigt (relevant för Docker/Azure vecka 5).
+
+---
+
+## Hur bilderna hänger ihop
+**Bild 1 är det som händer inne i backend-rutan i bild 2.** Bild 2 visar var den logiken bor i en riktig app och hur den når användaren.
+
+## Minnesregel
+- **Bild 1:** *LLM:en ger text, Pydantic gör den till data, Python gör något med datan.*
+- **Bild 2:** *DB sparar, backend tänker, API:et förmedlar, frontend visar.*

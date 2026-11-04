@@ -16,7 +16,6 @@ from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
 # Läser in variablerna från .env till miljövariablerna när modulen importeras.
-# .env ligger i .gitignore, så API-nyckeln hamnar aldrig i koden eller på GitHub.
 load_dotenv()
 
 
