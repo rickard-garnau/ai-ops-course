@@ -4,11 +4,10 @@ API:et hanterar HTTP, den här filen hanterar LLM:en. Då kan agenten
 testas för sig, t.ex. i en notebook, utan att starta servern.
 """
 
-from pydantic_ai import Agent
-from dotenv import load_dotenv
-
 from constants import MODEL_SMALL
 from data_models import ChatRequest, ChatResponse
+from dotenv import load_dotenv
+from pydantic_ai import Agent
 
 # Laddar NVIDIA_API_KEY från .env
 load_dotenv()
@@ -32,6 +31,9 @@ async def chat(request: ChatRequest) -> ChatResponse:
     )
 
     return ChatResponse(
-        response=result.output,                  # str: bottens svar
-        message_history=result.all_messages(),   # list[ModelMessage]: hela konversationen inkl. nya svaret
+        response=result.output,  # str: bottens svar
+        message_history=result.all_messages(),  # list[ModelMessage]: hela konversationen inkl. nya svaret
     )
+
+
+# Pydantic, PydanticAI och FastAPI

@@ -3,9 +3,10 @@
 Kör från mappen: uv run python main.py
 """
 
-from agents import weather_agent
 import asyncio
-from tools import WeatherDeps  # OBS: bör importeras från deps, se tools.py
+
+from agents import weather_agent
+from deps import WeatherDeps  # OBS: bör importeras från deps, se tools.py
 
 
 # **kwargs samlar alla extra namngivna argument (här deps=...) i en dict
