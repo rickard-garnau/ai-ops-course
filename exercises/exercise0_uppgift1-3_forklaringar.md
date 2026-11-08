@@ -6,7 +6,7 @@
 - [Uppgift 2 – Sentiment analysis (`exercises/02/reviews.ipynb`)](#uppgift-2)
 - [Uppgift 3 – A grading assistant (`exercises/03/student_text.ipynb`)](#uppgift-3)
 - [Pythons inbyggda funktioner och syntax som används](#inbyggda)
-- [Saker att rätta](#ratta)
+- [Kvar att rätta](#ratta)
 
 ---
 
@@ -28,7 +28,10 @@
 
 ## Flödet
 
-    products.json → list[dict] → list[str] → extract_product(text) → Product → list[Product] → DataFrame → jämför mot facit
+    products.json → list[dict] → list[str] → extract_product(text) → Product → list[Product] → DataFrame
+                                                                                              ↓
+                                     name/price/category/in_stock: jämför med == mot facit
+                                     description: domaragent (LLM-as-a-judge)
 
 ---
 
@@ -135,7 +138,67 @@ Raden `df_extracted` i mitten visas **inte**, eftersom Jupyter bara visar **sist
 
 ---
 
-### Cell 4–5 – c) Titta på facit och resultat
+### Cell 4 – c) Domaragent för `description`
+
+`description` är fritext. LLM:ens mening blir aldrig ordagrant lik originalet, så `==` ger alltid `False` även när betydelsen stämmer. Därför bedömer en **andra agent** om två texter säger samma sak. Det kallas **LLM-as-a-judge**, och det är det övningens notis syftar på.
+
+    class Judgement(BaseModel):
+        same_meaning: bool = Field(description="True if both texts describe the same product with the same facts")
+        reason: str = Field(description="Short explanation, one sentence")
+
+    judge_agent = Agent(model=model, instructions=(
+        "You compare two product descriptions. "
+        "Decide if they describe the same product with the same facts. "
+        "The wording may differ, only the facts matter."
+    ))
+
+    async def judge(original: str, extracted: str) -> Judgement:
+        prompt = f"Original:\n{original}\n\nExtracted:\n{extracted}"
+        result = await judge_agent.run(prompt, output_type=Judgement)
+        return result.output
+
+| Rad | Vad den gör | Typ |
+|---|---|---|
+| `same_meaning: bool` | domarens svar: ja eller nej. En `bool` går att räkna med `.sum()` | `bool` |
+| `reason: str` | motiveringen, så att du kan se *varför* om något underkänns | `str` |
+| `"The wording may differ, only the facts matter."` | säger att olika ordval är okej, bara fakta räknas | – |
+| `async def judge(original, extracted)` | **två** texter in, en bedömning ut | `Judgement` |
+| `f"Original:\n{original}\n\nExtracted:\n{extracted}"` | båda texterna i **en** prompt, med rubriker så att domaren vet vilken som är vilken. `\n` = radbrytning | `str` |
+
+---
+
+### Cell 5 – c) Kör domaren på alla produkter
+
+    judgements = []
+    for original, product in zip(descriptions, extracted):
+        judgement = await judge(original, product.description)
+        judgements.append(judgement)
+
+    df_extracted["description_ok"] = [j.same_meaning for j in judgements]
+    df_extracted["description_ok"].sum()
+
+| Rad | Vad den gör | Returnerar | Typ |
+|---|---|---|---|
+| `zip(descriptions, extracted)` | **inbyggd funktion**: går igenom två listor **samtidigt**. Varv 1 ger element 0 ur båda, varv 2 element 1 ur båda osv. | ett par per varv | `tuple` |
+| `for original, product in ...` | packar upp paret i två variabler, som `enumerate` | – | `str`, `Product` |
+| `product.description` | LLM:ens beskrivning från b) | – | `str` |
+| `await judge(...)` | ett LLM-anrop per produkt | bedömningen | `Judgement` |
+| `[j.same_meaning for j in judgements]` | plockar ut ja/nej ur varje bedömning | listan | `list[bool]` |
+| `df_extracted["description_ok"] = ...` | ny kolumn i tabellen | – | – |
+| `.sum()` | antal `True` | `6` | `int` |
+
+**`zip` jämfört med `enumerate`:**
+
+| Funktion | Ger per varv | Exempel |
+|---|---|---|
+| `enumerate(lista)` | nummer + element | `(1, "Nike ...")` |
+| `zip(lista_a, lista_b)` | element ur A + element ur B | `("The Nike ... $120", Product(...))` |
+
+**Resultat: 6 av 10.** De fyra strukturerade fälten var 10/10 (cell 8), men domaren underkände 4 beskrivningar. Titta på `[j.reason for j in judgements]` för att se varför. Antingen tappade LLM:en fakta när den skrev en mening, eller så är domaren för sträng. **Lärdom: en domare behöver också granskas.**
+
+---
+
+### Cell 6–7 – c) Titta på facit och resultat
 
     df_facit[["name", "price", "category", "in_stock"]]
     df_extracted[["name", "price", "category", "in_stock"]]
@@ -151,7 +214,7 @@ De yttre `[ ]` betyder "välj ur tabellen". De inre `[ ]` skapar en Python-lista
 
 ---
 
-### Cell 6 – c) Validera programmatiskt
+### Cell 8 – c) Validera de strukturerade fälten
 
     for column in ["name", "price", "category", "in_stock"]:
         correct = (df_facit[column] == df_extracted[column]).sum()
@@ -160,15 +223,12 @@ De yttre `[ ]` betyder "välj ur tabellen". De inre `[ ]` skapar en Python-lista
 | Del | Vad den gör | Returnerar | Typ |
 |---|---|---|---|
 | `for column in [...]` | ett kolumnnamn i taget | – | `str` |
-| `df_facit[column]` | en kolumn ur facit | kolumnen | `Series` |
-| `df_facit[column] == df_extracted[column]` | jämför **rad för rad**: rad 0 med rad 0, rad 1 med rad 1 osv. | en kolumn med True/False | `Series[bool]` |
+| `df_facit[column] == df_extracted[column]` | jämför **rad för rad**: rad 0 med rad 0 osv. | en kolumn med True/False | `Series[bool]` |
 | `( ... )` | parentesen gör att jämförelsen görs **först**, innan `.sum()` | – | – |
-| `.sum()` | i Python räknas `True` som 1 och `False` som 0, så summan blir antal rätt | `10` | `int` |
+| `.sum()` | `True` räknas som 1 och `False` som 0, så summan blir antal rätt | `10` | `int` |
 | `print(column, correct, "av", len(df_facit))` | `print` med kommatecken skriver ut allt i rad med mellanslag | – | – |
 
 **Resultat:** 10 av 10 på alla fyra fälten.
-
-**Kvar av c):** `description` går inte att kontrollera med `==`. LLM:ens mening blir aldrig ordagrant lik facit. Det kräver en **andra agent** (LLM-as-a-judge) som bedömer om två texter betyder samma sak, och det är det övningens notis syftar på.
 
 [↑ Till innehåll](#innehall)
 
@@ -267,9 +327,11 @@ Samma loop-och-append-mönster som uppgift 1. `predictions` hamnar i **samma ord
 |---|---|---|
 | `pd.DataFrame(reviews)` | tabell med kolumnerna `id`, `text`, `expected_sentiment` | `DataFrame` |
 | `df["predicted"] = predictions` | **skapar en ny kolumn**. Listan måste vara lika lång som tabellen (12) | – |
-| `(... == ...).sum(0)` | samma knep som uppgift 1c. `0` betyder "summera nedåt" (axis 0) och är standard, så `.sum()` räcker | `int` |
+| `(... == ...).sum(0)` | samma knep som uppgift 1c. Ger `10` | `int` |
 
 **Hakparenteser till vänster om `=`:** `df["predicted"] = ...` **skapar eller skriver över** en kolumn. Till höger om `=` **läser** `df["predicted"]` den.
+
+**Varningen `Pandas4Warning`:** `0` i `.sum(0)` betyder "summera nedåt" (axis 0). Det är standard, så `.sum()` räcker. Från pandas 4.0 måste det skrivas `.sum(axis=0)`, därav varningen. Skriv bara `.sum()`.
 
 ---
 
@@ -317,7 +379,7 @@ Ditt resultat:
 | Rad | Vad den gör | Typ |
 |---|---|---|
 | `df["predicted"] == "positive"` | jämför **varje rad** med en enda sträng: `True` där LLM:en sa positive | `Series[bool]` |
-| `said_positive & was_positive` | `&` = **och**: `True` bara där **båda** är `True`. I pandas används `&`, inte Pythons `and` | `Series[bool]` |
+| `said_positive & was_positive` | `&` = **och**: `True` bara där **båda** är `True` | `Series[bool]` |
 | `both` | antal rätt för klassen (diagonalrutan) | `int` |
 | `both / said_positive.sum()` | **precision**: av alla LLM:en *kallade* positive, hur många *var* positive? | `float` |
 | `both / was_positive.sum()` | **recall**: av alla som *var* positive, hur många *hittade* LLM:en? | `float` |
@@ -376,7 +438,7 @@ Samma sak i två rader, om det är lättare att läsa:
 
 **Loopen:** `for text in wrong["text"]` loopar över en kolumn och ger ett värde i taget. `print()` utan argument skriver en tom rad. `print` kortar aldrig av texten, vilket tabellen gör.
 
-**Resultat:** recension 3 ("It is okay ... Average quality") och 12 ("It works as described ... no issues"). LLM:en svarade neutral och positive, vilket är rimligt. Facit verkar ha fel. **Lärdom: evaluering är aldrig bättre än sitt facit.**
+**Resultat:** recension 3 ("It is okay ... Average quality for the price") och 12 ("It works as described ... no issues so far"). LLM:en svarade neutral och positive, vilket är rimligt. Facit verkar ha fel. **Lärdom: evaluering är aldrig bättre än sitt facit.**
 
 [↑ Till innehåll](#innehall)
 
@@ -404,10 +466,22 @@ Samma sak i två rader, om det är lättare att läsa:
 >
 > g) Can you improve the output quality by providing few shot examples?
 
+## Om datan: PDF:en från Uppsala universitet
+
+| | |
+|---|---|
+| **Uppgiften eleverna fick** | "Inför allas blickar": ett resonerande inlägg, 300–700 ord, om varför muntliga presentationer känns obehagliga och hur talängslan kan arbetas bort, med stöd i Peter Letmarks DN-artikel |
+| **Lärarens skala** | **aspektnivå 0–3** för tre aspekter: Innehåll, Disposition, Språk. Inga betyg F–A |
+| **Elev 1** (Svenska 1) | Innehåll 1, Disposition 1, Språk 1 → delprovsresultat 3 |
+| **Elev 2** (Svenska som andraspråk 1) | Innehåll 1, Disposition 1, Språk 2 → delprovsresultat 4 |
+
+Delprovsresultatet ser ut att vara summan av aspektnivåerna. `svenska1_criterias.txt` (F–A) och PDF:ens matris (nivå 0–3) är alltså **två olika skalor**. Därför bedömer agenten båda.
+
 ## Flödet
 
-    student_text_*.txt → list[str] → grade_text(text) → Student → mapp per elev med 3 txt-filer
-                                   → grade_with_criteria(text) → Student → jämför
+    student_text_*.txt → list[str] ─┬→ grade_text (utan kriterier)          → Student
+                                    ├→ grade_with_criteria (Svenska 1, F–A)  → Student → grades_med_kriterier/
+                                    └→ make_agent (uppgift + matris + exempel) → Student → jämför mot läraren
 
 ---
 
@@ -428,13 +502,20 @@ Samma sak i två rader, om det är lättare att läsa:
 
 ### Cell 1 – c) Schema, agent och funktion
 
-    class Student(BaseModel):
-        proposed_grade: str = Field(description="...")
-        motivation: str = Field(description="...")
-        improvements: str = Field(description="...")
+    Level = Literal[0, 1, 2, 3]
 
-    grading_agent = Agent(model=model, instructions=("Du är en erfaren svensklärare ... "
-                                                     "Du bedömer elevtexter ... "))
+    class Student(BaseModel):
+        proposed_grade: Literal["F", "E", "D", "C", "B", "A"] = Field(...)
+        innehall: Level = Field(...)
+        disposition: Level = Field(...)
+        sprak: Level = Field(...)
+        motivation: str = Field(...)
+        improvements: str = Field(...)
+
+    grading_agent = Agent(model=model, instructions=(
+        "Du är en erfaren svensklärare på gymnasiet. "
+        "Du bedömer elevtexter och ger ett betygförslag. Svara på svenska. "
+    ))
 
     async def grade_text(text: str) -> Student:
         result = await grading_agent.run(text, output_type=Student)
@@ -442,40 +523,48 @@ Samma sak i två rader, om det är lättare att läsa:
 
 | Del | Vad den gör |
 |---|---|
-| `class Student(BaseModel)` | de tre fälten som uppgift c) kräver |
-| `instructions=("..." "...")` | två strängar efter varandra inom parentes slås automatiskt ihop till **en** sträng (implicit string concatenation). Därför behövs mellanslag sist i varje del |
-| instruktioner på svenska | elevtexterna är på svenska, så svaren blir det också |
+| `Level = Literal[0, 1, 2, 3]` | ett **type alias**: typen sparas i en variabel så att den inte behöver skrivas tre gånger. `Literal` fungerar med tal också |
+| `proposed_grade: Literal["F", ..., "A"]` | betyget måste vara ett av de sex giltiga. Svarar LLM:en "B+" får den försöka igen |
+| `innehall`, `disposition`, `sprak` | samma tre aspekter som i lärarens matris, så att de går att jämföra direkt |
+| `motivation`, `improvements` | fritext, som övningen kräver |
+| `instructions=("..." "...")` | två strängar efter varandra inom parentes slås automatiskt ihop till **en** sträng (implicit string concatenation) |
+| `grade_text(text) -> Student` | **utan** kriterier, alltså bara modellens egen uppfattning |
+
+Fältnamnen saknar å, ä och ö. Det fungerar i Python, men JSON-schemat som skickas till LLM:en blir säkrare utan.
 
 ---
 
 ### Cell 2 – d) En mapp per elev med tre filer
 
     for i, text in enumerate(texts, start=1):
-        grade = await grade_text(text)
+        grade = await grade_with_criteria(text)
 
-        folder = Path("grades") / f"student_{i}"
+        folder = Path("grades_med_kriterier") / f"student_{i}"
         folder.mkdir(parents=True, exist_ok=True)
 
         (folder / "proposed_grade.txt").write_text(grade.proposed_grade, encoding="utf-8")
-        ...
+        (folder / "motivation.txt").write_text(grade.motivation, encoding="utf-8")
+        (folder / "improvements.txt").write_text(grade.improvements, encoding="utf-8")
 
 | Del | Vad den gör | Typ |
 |---|---|---|
 | `enumerate(texts, start=1)` | ger **två** värden per varv: ett nummer och en text | `int`, `str` |
 | `f"student_{i}"` | f-string: `{i}` byts mot numret → `"student_1"` | `str` |
-| `Path("grades") / f"student_{i}"` | `/` på ett `Path`-objekt **sätter ihop sökvägar** (ingen division) → `grades/student_1` | `Path` |
-| `folder.mkdir(parents=True, exist_ok=True)` | skapar mappen. `parents=True` skapar `grades/` också. `exist_ok=True` gör att det inte blir fel om mappen redan finns | – |
+| `Path("grades_med_kriterier") / f"student_{i}"` | `/` på ett `Path`-objekt **sätter ihop sökvägar** (ingen division) | `Path` |
+| `folder.mkdir(parents=True, exist_ok=True)` | skapar mappen. `parents=True` skapar föräldramappen också. `exist_ok=True` gör att det inte blir fel om mappen redan finns | – |
 | `(folder / "proposed_grade.txt")` | parentesen bygger sökvägen **först**, sedan anropas `.write_text` på den | `Path` |
 | `.write_text(..., encoding="utf-8")` | skapar filen och skriver texten, samma som `open(..., "w")` + `write` | – |
 
 Resultat:
 
-    grades/
+    grades_med_kriterier/
     ├── student_1/
     │   ├── proposed_grade.txt
     │   ├── motivation.txt
     │   └── improvements.txt
     └── student_2/ ...
+
+**Se rättelse 1:** cellen använder `grade_with_criteria`, som skapas först i cell 4.
 
 ---
 
@@ -489,7 +578,7 @@ Resultat:
 | Rad | Vad den gör | Returnerar | Typ |
 |---|---|---|---|
 | `.read_text(...)` | hela filen: kursplan + kriterier | allt | `str` |
-| `all_text.find("Betygskriterier")` | strängmetod som letar upp var ordet **börjar**. Den ger positionen som ett tal (vilket tecken i ordningen, räknat från 0). Hittas ordet inte blir det `-1` | position | `int` |
+| `all_text.find("Betygskriterier")` | strängmetod som letar upp var ordet **börjar** och ger positionen som ett tal, räknat från 0. Hittas ordet inte blir det `-1` | position | `int` |
 | `all_text[start:]` | **slicing**: plockar ut en bit av en sträng. `[start:]` = från `start` till slutet | kriterierna | `str` |
 
 **Slicing i korthet** (fungerar på strängar och listor):
@@ -505,15 +594,14 @@ Resultat:
 
 ### Cell 4 – f) Agent med kriterierna i prompten
 
-    criteria_agent = Agent(
-        model=model,
-        instructions=(
-            "Du är en erfaren svensklärare på gymnasiet"
-            "Du bedömer elevtexter och ger betygsförslag. Svara på svenska"
-            "Bedöm texten enbart utifrån följande betygskriterier:\n\n"
-            + criteria
-        ),
-    )
+    criteria_agent = Agent(model=model, instructions=(
+        "Du är en erfaren svensklärare på gymnasiet"
+        "Du bedömer elevtexter och ger betygsförslag. Svara på svenska"
+        "Bedöm texten enbart utifrån följande betygskriterier:\n\n"
+        + criteria
+    ))
+
+    async def grade_with_criteria(text: str) -> Student: ...
 
 | Del | Vad den gör |
 |---|---|
@@ -529,11 +617,74 @@ Resultat:
         without = await grade_text(text)
         with_criteria = await grade_with_criteria(text)
 
-    print(f"Elev {i}")
-    print(" utan kriterier:", without.proposed_grade)
-    print(" med kriterier:", with_criteria.proposed_grade)
+        print(f"Elev {i}")
+        print(" utan kriterier:", without.proposed_grade)
+        print(" med kriterier:", with_criteria.proposed_grade)
 
-Två LLM-anrop per elev, ett per agent. `print` med kommatecken skriver ut text och värde efter varandra. **Se rättelse 1 nedan.**
+Två LLM-anrop per elev, ett per agent. **Indraget avgör vad som hör till loopen**: `print`-raderna står i loopen och körs varje varv.
+
+**Resultat:**
+
+| | Utan kriterier | Med kriterier |
+|---|---|---|
+| Elev 1 | F | E |
+| Elev 2 | E | E |
+
+Med kriterierna blev bedömningen av elev 1 snällare (F → E). Kriterierna för E beskriver vad som räcker för godkänt, och det gav modellen något konkret att pröva texten mot. Det är svaret på f) "Can you see any differences?".
+
+Kriterierna i `svenska1_criterias.txt` gäller hela kursen (även muntlig framställning). Elevtexten är ett skriftligt prov med en egen matris, så F–A-betyget blir ändå en grov uppskattning.
+
+---
+
+### Cell 6 – g) Few-shot med lärarens bedömning
+
+    task = Path("data/uppgift.txt").read_text(encoding="utf-8")
+    matrix = Path("data/bedomningsmatris.txt").read_text(encoding="utf-8")
+
+    def make_agent(example_text: str, example_levels: str) -> Agent:
+        return Agent(model=model, instructions=(
+            "Du är en erfaren svensklärare och bedömer nationella prov. Svara på svenska.\n\n"
+            "Eleverna fick denna uppgift:\n" + task +
+            "\n\nBedöm enligt denna matris:\n" + matrix +
+            "\n\nExempel på en bedömd elevtext:\n" + example_text +
+            "\n\nLärarens bedömning: " + example_levels
+        ))
+
+    agent_for_elev_2 = make_agent(texts[0], "Innehåll 1, Disposition 1, Språk 1")
+    agent_for_elev_1 = make_agent(texts[1], "Innehåll 1, Disposition 1, Språk 2")
+
+    result_1 = await agent_for_elev_1.run(texts[0], output_type=Student)
+    result_2 = await agent_for_elev_2.run(texts[1], output_type=Student)
+
+    for name, result, facit in [("Elev 1", result_1, "1 / 1 / 1"), ("Elev 2", result_2, "1 / 1 / 2")]:
+        s = result.output
+        print(name, "LLM:", s.innehall, "/", s.disposition, "/", s.sprak, "  Lärare:", facit)
+
+**Few-shot** betyder att modellen får se **exempel med rätt svar** innan den bedömer. Med bara två elevtexter används **leave-one-out**: varje elev bedöms av en agent som har sett den **andra** elevens text och lärarens bedömning av den, men aldrig sin egen text.
+
+| Del | Vad den gör | Typ |
+|---|---|---|
+| `task`, `matrix` | uppgiften eleverna fick och lärarens bedömningsmatris (från PDF:en) | `str` |
+| `def make_agent(...) -> Agent:` | en funktion som **bygger och returnerar en agent**. Samma långa prompt behöver inte skrivas två gånger | `Agent` |
+| `"..." + task + "..." + matrix + ...` | prompten byggs av fem delar: roll, uppgift, matris, exempel och lärarens bedömning | `str` |
+| `make_agent(texts[0], "Innehåll 1, ...")` | elev 1 är exemplet → agenten används för att bedöma **elev 2** | `Agent` |
+| `make_agent(texts[1], "...Språk 2")` | elev 2 är exemplet → agenten bedömer **elev 1** | `Agent` |
+| `[("Elev 1", result_1, "1 / 1 / 1"), (...)]` | en lista med **tuples**. Varje tuple håller ihop namn, resultat och facit | `list[tuple]` |
+| `for name, result, facit in ...` | packar upp varje tuple i tre variabler | `str`, `AgentRunResult`, `str` |
+| `s = result.output` | ett kortare namn, så att print-raden blir läsbar | `Student` |
+
+**Funktion som returnerar en agent:** hittills har funktionerna returnerat data (`str`, `Product`). En funktion kan returnera vilket objekt som helst, även en agent. `make_agent` är en **fabrik** som tillverkar agenter med olika exempel.
+
+**Resultat:**
+
+| | LLM (Innehåll / Disposition / Språk) | Lärare |
+|---|---|---|
+| Elev 1 | 1 / 1 / 1 | 1 / 1 / 1 |
+| Elev 2 | 1 / 1 / 1 | 1 / 1 / 2 |
+
+**5 av 6 aspekter stämmer.** Skillnaden är Språk för elev 2. Läraren bedömde elev 2 enligt matrisen för **svenska som andraspråk**, där kraven på Språk är lägre ("begripligt", "kommunikationen fungerar"), medan agenten fick matrisen för svenska nivå 1. Det förklarar troligen skillnaden.
+
+**Svar på g):** ja. Med uppgiften, rätt matris och ett bedömt exempel bedömer modellen på samma skala som läraren och hamnar nära. Utan dem gav den F–E på en skala läraren inte använder.
 
 [↑ Till innehåll](#innehall)
 
@@ -552,6 +703,7 @@ Två LLM-anrop per elev, ett per agent. `print` med kommatecken skriver ut text 
 | `print(...)` | skriver ut. Flera argument separeras med mellanslag. `print()` ger en tom rad | `print(column, correct, "av", 10)` | `None` |
 | `sorted(x)` | ny sorterad lista (originalet ändras inte) | `sorted(Path("data").glob(...))` | `list` |
 | `enumerate(x, start=1)` | ger par: (nummer, element) | `for i, text in enumerate(texts, start=1)` | par per varv |
+| `zip(a, b)` | ger par: (element ur a, element ur b) | `for original, product in zip(descriptions, extracted)` | par per varv |
 
 ## Inbyggda moduler (kräver import, ingår i Python)
 
@@ -578,12 +730,17 @@ Två LLM-anrop per elev, ett per agent. `print` med kommatecken skriver ut text 
 | `[uttryck for x in lista]` | list comprehension, en loop som bygger en lista | `[r["text"] for r in reviews]` |
 | `d["nyckel"]` | hämtar ett värde ur en dict | `product["description"]` |
 | `s[start:]` | slicing, en bit av en sträng eller lista | `all_text[start:]` |
+| `lista[0]` | ett element på plats 0 (första) | `texts[0]` |
 | `f"...{x}..."` | f-string, där `{x}` byts mot värdet | `f"student_{i}"` |
-| `"a" + "b"` | sätter ihop strängar | `"...:\n\n" + criteria` |
+| `"a" + "b"` | sätter ihop strängar | `"...:\n" + task` |
 | `"a" "b"` | två strängar bredvid varandra slås ihop automatiskt | `instructions=("Du är ... " "Du bedömer ...")` |
 | `\n` | radbrytning inne i en sträng | `"\n\n"` |
 | `==` / `!=` | lika med / inte lika med | `df["predicted"] == "positive"` |
-| `a, b` | tuple, flera värden på en gång | `precision, recall` |
+| `(a, b, c)` | tuple, flera värden som hålls ihop | `("Elev 1", result_1, "1 / 1 / 1")` |
+| `for a, b in ...` | packar upp ett par eller en tuple i flera variabler | `for name, result, facit in ...` |
+| `Namn = Literal[...]` | type alias, en typ sparad i en variabel | `Level = Literal[0, 1, 2, 3]` |
+| `def f(...) -> Typ:` | funktion med returtyp. Kan returnera vad som helst, även en agent | `def make_agent(...) -> Agent:` |
+| indrag | allt indraget under `for`/`def`/`with` hör till blocket | `print` i loopen körs varje varv |
 | `True` = 1, `False` = 0 | därför går det att summera jämförelser | `(... == ...).sum()` |
 
 ## Pandas (inte inbyggt, men används överallt)
@@ -606,25 +763,12 @@ Två LLM-anrop per elev, ett per agent. `print` med kommatecken skriver ut text 
 
 <a id="ratta"></a>
 
-# Saker att rätta
+# Kvar att rätta
 
-**1. Uppgift 3, cell 5: bara sista eleven skrivs ut.**
-De tre `print`-raderna står **utanför** loopen (inget indrag). Loopen kör alla elever, men utskriften sker först efteråt, med variablerna från sista varvet. Indentera de tre `print`-raderna ett steg så att de ligger i loopen.
+**1. Uppgift 3: cellordningen.**
+Cell 2 använder `grade_with_criteria`, men den skapas först i cell 4. Kör du notebooken uppifrån och ned efter en omstart får du `NameError`. Flytta cell 2 så att den ligger **efter** cell 4.
 
-**2. Uppgift 3, cell 4: orden klistras ihop i prompten.**
-Strängarna saknar mellanslag och punkt i slutet, så de blir `"...på gymnasietDu bedömer ... svenskaBedöm texten..."`. Lägg till `". "` sist i varje del, som i `grading_agent`.
+Den ursprungliga d)-loopen (utan kriterier, till `grades/`) finns inte längre i notebooken. Mappen `grades/` har kvar resultaten från förra körningen, men går inte att återskapa. Vill du ha båda kan du lägga tillbaka en kopia av loopen med `grade_text` och `"grades"`.
 
-**3. Uppgift 3, cell 1: `proposed_grade: str`.**
-Med `str` kan LLM:en svara "B+" eller "Godkänd". `Literal["F", "E", "D", "C", "B", "A"]` tvingar fram ett giltigt betyg (`Literal` är redan importerat i cell 0).
-
-**4. Uppgift 3 d) med kriterier: inte gjort än.**
-f) ber dig upprepa d), alltså spara även kriterie-versionens svar i filer. Kopiera fil-loopen från cell 2 och byt `grade_text` → `grade_with_criteria` och `"grades"` → t.ex. `"grades_med_kriterier"`.
-
-**5. Uppgift 2, cell 9–10: missvisande variabelnamn.**
-`said_positive` och `was_positive` används även för neutral och negative. Koden räknar rätt, men namnen ljuger. Döp om till t.ex. `said_neutral` / `was_neutral`, eller allmänt `said` / `was`.
-
-**6. Uppgift 1 c): `description` inte validerad.**
-Kräver en andra agent som bedömer om LLM:ens beskrivning stämmer med originalet (LLM-as-a-judge).
-
-**7. Uppgift 3 g): few-shot inte gjort.**
-Lägg in 1–2 elevtexter med **lärarens faktiska betyg** (finns i PDF:en) i `instructions` som exempel, och se om betygen kommer närmare.
+**2. Uppgift 2, cell 4: `.sum(0)` → `.sum()`.**
+Tar bort `Pandas4Warning`, och resultatet är detsamma.
