@@ -1,6 +1,5 @@
-from typing import Literal
-
 from pydantic import BaseModel, Field
+from typing import Literal
 
 
 class Movie(BaseModel):
@@ -19,3 +18,6 @@ class Movie(BaseModel):
     summary: str = Field(
         description="short exciting summary of the movie, max 3 sentences"
     )
+
+class Prompt(BaseModel):
+    prompt: str

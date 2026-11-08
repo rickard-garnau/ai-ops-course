@@ -1,30 +1,25 @@
-import pandas as pd
 import requests
 import streamlit as st
+import pandas as pd
+# from api import create_movie, read_movies -> tightly coupled
 
 
 def layout():
-    st.title(" Chatbot")
+    st.markdown("# Cool Movies")
 
-    movie_string = st.text_input("Give me a statement and it will give back a movie")
+    movie_string = st.text_input("Give a statement and it will give backa movie")
 
-    movie = requests.post(
-        "http://127.0.0.1:8000/movie", json={"query": movie_string}
-    ).json()
-
-    st.write(movie)
+    if movie_string:
+        movie = requests.post("http://127.0.0.1:8000/movie", json={"prompt": movie_string}).json()
+        st.write(movie)
 
     genre = st.selectbox(
-        "Choose genre", options=["action", "comedy", "thriller", "horror"]
+        "Choose genre", options=["all","action", "comedy", "cartoon", "adventure", "romance"]
     )
+
     movies = requests.get(f"http://127.0.0.1:8000/movies?genre={genre}").json()
-    st.dataframe(pd.DataFrame(movies))
 
-
-def init_session_states():
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-        return []
+    st.dataframe(movies)
 
 
 if __name__ == "__main__":
