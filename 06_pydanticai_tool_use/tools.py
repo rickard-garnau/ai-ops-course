@@ -11,17 +11,8 @@ PydanticAI bygger verktygsbeskrivningen som LLM:en ser från:
 """
 
 import httpx
-from dataclasses import dataclass
+from deps import WeatherDeps
 from pydantic_ai import RunContext
-
-
-# OBS: WeatherDeps finns också i deps.py. agents.py importerar den från deps.py
-# och main.py härifrån. Det blir två olika klasser med samma namn. Det fungerar
-# ändå, eftersom deps_type bara används för typkontroll, men en av dem bör tas bort
-# och båda filerna importera från deps.py.
-@dataclass
-class WeatherDeps:
-    city: str
 
 
 # Första parametern är RunContext → PydanticAI förstår att verktyget vill ha

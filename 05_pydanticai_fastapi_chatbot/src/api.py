@@ -6,10 +6,9 @@ Starta från src/:
 Dokumentation och testsida: http://127.0.0.1:8000/docs
 """
 
-from fastapi import FastAPI
-
 from chat_agent import chat
 from data_models import ChatRequest, ChatResponse
+from fastapi import FastAPI
 
 app = FastAPI()
 
@@ -20,4 +19,6 @@ async def joke_chat(request: ChatRequest):
     # FastAPI har redan validerat request-bodyn mot ChatRequest.
     # Endpointen skickar bara vidare till chat-logiken, så den hålls tunn.
     chat_response = await chat(request)
+
+    # Skulle kunna ha logik för att spara chat i en databas:
     return chat_response

@@ -840,3 +840,75 @@ Det som ofta är *output* från en modell är fortfarande text. Bild- eller ljud
 ## Minnesregel
 - **Bild 1:** *LLM:en ger text, Pydantic gör den till data, Python gör något med datan.*
 - **Bild 2:** *DB sparar, backend tänker, API:et förmedlar, frontend visar.*
+
+# Varför Pydantic, PydanticAI och FastAPI fungerar så bra ihop
+
+## Kärnan: en modell, tre användningsområden
+
+Alla tre bygger på **samma grund: Pydantic-modeller och Pythons type hints**. Därför räcker det att beskriva datan **en gång**, så kan den användas överallt:
+
+    class Movie(BaseModel):
+        title: str
+        year: int
+        genre: Literal["action", "comedy", ...]
+        rating: int = Field(ge=1, le=5)
+
+| Verktyg | Vad det gör med `Movie` |
+|---|---|
+| **Pydantic** | validerar datan: rätt typer, `rating` mellan 1 och 5, `genre` bara från listan |
+| **PydanticAI** | skickar schemat till LLM:en och tvingar svaret att passa (`output_type=Movie`) |
+| **FastAPI** | skickar `Movie` som JSON till klienten och dokumenterar den i `/docs` |
+
+Utan den gemensamma grunden hade du behövt skriva samma regler tre gånger: en gång för LLM:en, en gång för validering och en gång för API:et. Med tre kopior av samma regler glider de isär förr eller senare.
+
+## Den gemensamma nämnaren: JSON Schema
+
+Pydantic kan göra om en modell till **JSON Schema**, en standardiserad beskrivning av hur data ska se ut. Båda de andra verktygen använder det:
+
+    Movie (Pydantic)
+       │
+       └─→ JSON Schema ─┬─→ PydanticAI: skickas till LLM:en → "svara exakt i den här formen"
+                        └─→ FastAPI:     blir OpenAPI-dokumentationen på /docs
+
+`Field(description=...)` hamnar alltså **både** i LLM:ens instruktion **och** i API-dokumentationen.
+
+## Validering vid båda gränserna
+
+En app har två ställen där opålitlig data kommer in:
+
+    Användare ──→ [FastAPI validerar] ──→ backend ──→ LLM ──→ [PydanticAI validerar] ──→ backend
+                   (Prompt)                                    (Movie)
+
+| Gräns | Vem validerar | Vad händer vid fel |
+|---|---|---|
+| Användare → API | FastAPI via `query: Prompt` | `422` direkt, och koden körs inte |
+| LLM → backend | PydanticAI via `output_type=Movie` | felet skickas tillbaka till LLM:en, som får försöka igen |
+
+Det betyder att **koden däremellan kan lita på datan**. När du skriver `movie.year` i `INSERT` vet du att det är en `int`.
+
+## Serialisering åt båda hållen
+
+| Riktning | Vad som händer | Vem gör det |
+|---|---|---|
+| JSON in → objekt | request-body → `Prompt`, LLM-svar → `Movie` | FastAPI / PydanticAI (`model_validate`) |
+| objekt → JSON ut | `return movie` → JSON till frontenden | FastAPI (`model_dump`) |
+
+Du skriver aldrig `json.loads` eller `json.dumps` själv.
+
+## Byggda för samma sätt att skriva kod
+
+- **Type hints överallt:** `def create_movie(query: Prompt) -> Movie`. Samma typer styr validering, dokumentation och autocomplete i editorn.
+- **async:** både FastAPI-endpoints och `agent.run()` är asynkrona, så `await agent.run(...)` fungerar direkt i en endpoint utan att blockera andra användare.
+- **Samma ekosystem:** PydanticAI är gjort av Pydantic-teamet, och FastAPI är byggt ovanpå Pydantic från början. Därför passar de ihop utan "lim".
+
+## I din kod (lektion 4)
+
+| Fil | Verktyg | Pydantic-modellens roll |
+|---|---|---|
+| `data_models.py` | Pydantic | definierar `Movie` och `Prompt` **en gång** |
+| `agents.py` | PydanticAI | `output_type=Movie` → LLM:en måste svara som en `Movie` |
+| `api.py` | FastAPI | `query: Prompt` validerar input, `return movie` blir JSON |
+| `frontend.py` | (Streamlit) | skickar `{"prompt": ...}`, får tillbaka `Movie` som JSON |
+
+## Minnesregel
+**Pydantic beskriver datan. PydanticAI tvingar LLM:en att följa beskrivningen. FastAPI tvingar användaren att följa den och skickar ut den.** En modell, tre dörrvakter.
