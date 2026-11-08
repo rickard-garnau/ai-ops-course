@@ -1,1 +1,1 @@
-Eleven har ett tydligt ämne och använder en källtext, men texten innehåller flera språkfel som påverkar läsbarheten, till exempel stavning, böjning och meningssyntax. Resonemanget är ganska ytligt och kopplingarna till källan skulle kunna vara tydligare och mer utvecklade.
+Texten har ett tydligt ämne och en enkel disposition med inledning, brödtext och avslutning, samt en referens till en extern källa. Språket innehåller dock flera fel (såsom "plast" istället för "plats" och "uppleves") som ibland påverkar läsbarheten, och resonemanget är ganska ensidigt och upprepande.
