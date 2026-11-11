@@ -1,9 +1,9 @@
-from pydantic_ai import Agent
-from pydantic_ai import RunContext
-from model import nvidia_model
-from dependencies import ClientDeps
 from datetime import datetime
 from pathlib import Path
+
+from dependencies import ClientDeps
+from model import nvidia_model
+from pydantic_ai import Agent, RunContext
 
 model = nvidia_model("nvidia/nemotron-3.5-super-vl-120b-a12b")
 
@@ -59,11 +59,13 @@ async def ask_study_agent(ctx: RunContext[ClientDeps], question: str) -> str:
     result = await study_agent.run(question, deps=ctx.deps, usage=ctx.usage)
     return result.output
 
+
 @coach_agent.tool
 async def ask_career_agent(ctx: RunContext[ClientDeps], question: str) -> str:
     """ask career specialist for advice on what to choose for a career"""
     result = await career_agent.run(question, deps=ctx.deps, usage=ctx.usage)
     return result.output
+
 
 @coach_agent.tool
 def export_report(ctx: RunContext[ClientDeps], text: str):
@@ -72,4 +74,4 @@ def export_report(ctx: RunContext[ClientDeps], text: str):
     exports_dir = Path("exports")
     exports_dir.mkdir(exist_ok=True)
     path = exports_dir / f"{ctx.deps.name.casefold()}_{timestamp}.md"
-    path.write_text(text)
+    path.write_text(text, encoding="utf-8")

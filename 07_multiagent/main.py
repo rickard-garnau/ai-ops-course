@@ -1,5 +1,11 @@
-from agents import coach_agent, ClientDeps
 import asyncio
+
+import logfire
+from agents import ClientDeps, coach_agent
+
+logfire.configure()
+logfire.instrument_system_metrics()
+logfire.instrument_pydantic_ai()
 
 
 async def main(prompt: str, **kwargs):
