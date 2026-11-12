@@ -1,8 +1,9 @@
 import os
-from dotenv import load_dotenv
-from openai import OpenAI
-from lancedb.embeddings import TextEmbeddingFunction, get_registry
+
 import numpy as np
+from dotenv import load_dotenv
+from lancedb.embeddings import TextEmbeddingFunction, get_registry
+from openai import OpenAI
 
 load_dotenv()
 
